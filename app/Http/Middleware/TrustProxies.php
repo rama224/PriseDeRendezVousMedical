@@ -10,9 +10,12 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * En production, l'application est derrière le proxy HTTPS de l'hébergeur
+     * (Railway) dont l'adresse n'est pas fixe : on lui fait donc confiance.
+     *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.
