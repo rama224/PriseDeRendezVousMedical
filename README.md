@@ -5,6 +5,7 @@ Mini-application web permettant à un patient de créer un compte, puis de rése
 Réalisée dans le cadre du test technique *Développeur(se) Fullstack*.
 
 - **Application en ligne :** _lien à venir_
+- **Code source :** <https://github.com/rama224/PriseDeRendezVousMedical>
 - **Compte de test :** `patient@test.com` / `password`
 
 ---
@@ -160,7 +161,7 @@ Ces règles sont vérifiées dès la page de confirmation, pour prévenir le pat
 
 ```bash
 # 1. Récupérer le projet
-git clone <url-du-depot> PriseDeRendezVousMedical
+git clone https://github.com/rama224/PriseDeRendezVousMedical.git
 cd PriseDeRendezVousMedical
 
 # 2. Installer les dépendances PHP
