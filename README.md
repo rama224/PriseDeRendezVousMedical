@@ -4,9 +4,11 @@ Mini-application web permettant à un patient de créer un compte, puis de rése
 
 Réalisée dans le cadre du test technique *Développeur(se) Fullstack*.
 
-- **Application en ligne :** _lien à venir_
+- **Application en ligne :** <https://rdv-medical-109y.onrender.com>
 - **Code source :** <https://github.com/rama224/PriseDeRendezVousMedical>
 - **Compte de test :** `patient@test.com` / `password`
+
+> L'application est hébergée sur l'offre gratuite de Render : après 15 minutes sans visite, elle se met en veille et **le premier chargement peut prendre 30 à 60 secondes**. Les pages suivantes s'affichent normalement.
 
 ---
 
@@ -18,8 +20,9 @@ Réalisée dans le cadre du test technique *Développeur(se) Fullstack*.
 4. [Règles métier](#règles-métier)
 5. [Installation locale](#installation-locale)
 6. [Tests](#tests)
-7. [Structure du projet](#structure-du-projet)
-8. [Pistes d'amélioration](#pistes-damélioration)
+7. [Déploiement](#déploiement)
+8. [Structure du projet](#structure-du-projet)
+9. [Pistes d'amélioration](#pistes-damélioration)
 
 ---
 
@@ -52,7 +55,8 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 | Élément | Choix | Pourquoi |
 |---|---|---|
 | Backend | **Laravel 8** (PHP ≥ 7.3) | Framework MVC complet : ORM Eloquent, migrations, validation, authentification, tests intégrés |
-| Base de données | **MySQL** (moteur InnoDB) | Relationnelle, adaptée aux liens centre / spécialité / médecin / rendez-vous ; InnoDB pour les clés étrangères et les transactions |
+| Base de données | **MySQL** (InnoDB) en local, **PostgreSQL** en production | Relationnelle, adaptée aux liens centre / spécialité / médecin / rendez-vous. Le code n'utilise que l'ORM et les migrations de Laravel, sans SQL propre à un moteur : il fonctionne à l'identique sur MySQL, PostgreSQL et SQLite (tests) |
+| Hébergement | **Render** (Docker, PHP 8.1 + Apache) | Offre gratuite, base PostgreSQL gérée, déploiement automatique à chaque push sur GitHub |
 | Frontend | **Blade + Bootstrap 5** (CDN) | Rendu serveur simple et rapide à livrer, responsive sans étape de compilation (pas de npm requis) |
 | Authentification | Contrôleurs écrits à la main | Code court et lisible, sans dépendance supplémentaire (Breeze, Jetstream…) pour un besoin simple |
 | Tests | **PHPUnit** + SQLite en mémoire | Rapides et isolés : la base de développement n'est jamais touchée |
@@ -187,7 +191,7 @@ php artisan key:generate
    mysql -u root -p prise_rendezvous_medical_db < database/sql/schema.sql
    mysql -u root -p prise_rendezvous_medical_db < database/sql/donnees.sql
    ```
-   (ou via phpMyAdmin > Importer, dans le même ordre). Les dates d'absence sont alors celles du jour de génération des scripts.
+   (ou via phpMyAdmin > Importer, dans le même ordre). Comme avec le seeder, les dates d'absence sont calculées par MySQL à partir du jour de l'import (`CURDATE()`).
 
 6. Lancez l'application :
    ```bash
@@ -238,6 +242,40 @@ Les tests s'exécutent sur une base **SQLite en mémoire** (configurée dans `ph
 
 ---
 
+## Déploiement
+
+L'application en ligne est hébergée sur **[Render](https://render.com)** (offre gratuite, région Frankfurt) :
+
+| Service Render | Rôle |
+|---|---|
+| **Web Service** (Docker) | Construit l'image décrite par le `Dockerfile` : PHP 8.1 (dernière version officiellement supportée par Laravel 8) et Apache, avec la racine web sur `public/` |
+| **PostgreSQL** | Base de données de production, jointe par son adresse interne (réseau privé Render) |
+
+À chaque démarrage, `docker/start.sh` :
+1. met en cache la configuration et les vues ;
+2. applique les migrations (`php artisan migrate --force`) ;
+3. charge le jeu de données d'exemple si la base est vide ;
+4. recalcule les absences de démonstration à partir de la date du jour ;
+5. démarre Apache.
+
+**Variables d'environnement** à définir sur le service :
+
+| Variable | Valeur |
+|---|---|
+| `APP_NAME` | `RDV Medical` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_KEY` | clé générée avec `php artisan key:generate --show` |
+| `DB_CONNECTION` | `pgsql` |
+| `DATABASE_URL` | *Internal Database URL* de la base PostgreSQL Render |
+| `LOG_CHANNEL` | `stderr` (erreurs visibles dans les logs Render) |
+
+Chaque push sur la branche `main` redéploie automatiquement l'application. Derrière le proxy HTTPS de Render, `TrustProxies` est configuré pour que Laravel génère des liens en `https://`.
+
+> Limites de l'offre gratuite : mise en veille après 15 minutes d'inactivité, et base PostgreSQL gratuite valable 30 jours.
+
+---
+
 ## Structure du projet
 
 ```
@@ -264,6 +302,8 @@ resources/views/
 └── rendez-vous/                       # Réservation, confirmation, mes rendez-vous
 routes/web.php                         # Routes de l'application
 tests/                                 # Tests unitaires et fonctionnels
+docker/start.sh                        # Script de démarrage en production
+Dockerfile                             # Image de production (PHP 8.1 + Apache)
 ```
 
 ---
