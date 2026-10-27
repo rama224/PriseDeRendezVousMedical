@@ -43,7 +43,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 - ✅ Annulation d'un rendez-vous à venir (le créneau redevient disponible)
 - ✅ Interface responsive (Bootstrap 5)
 - ✅ Gestion de l'authentification (utilisateur simple : chaque patient a son compte et n'accède qu'à ses propres rendez-vous)
-- ✅ 33 tests automatisés (unitaires et fonctionnels)
+- ✅ 35 tests automatisés (unitaires et fonctionnels)
 
 ---
 
@@ -217,6 +217,8 @@ Vous pouvez aussi créer votre propre compte depuis la page d'inscription.
   - Dr Sylla (Médecine générale, Clinique Les Palmiers) : congés, toute la semaine suivante
   - Dr Condé (Médecine générale, Polyclinique Espoir) : motif « autre », le prochain jour ouvré
 
+  Ces absences de démonstration sont recalculées par rapport au jour courant à chaque démarrage de l'application en ligne (`docker/start.sh`), et en local avec `php artisan db:seed --class=AbsenceSeeder`. Il y a donc toujours des cas à tester, quel que soit le jour de la visite.
+
 ---
 
 ## Tests
@@ -230,6 +232,7 @@ Les tests s'exécutent sur une base **SQLite en mémoire** (configurée dans `ph
 | Fichier | Ce qui est vérifié |
 |---|---|
 | `tests/Unit/CreneauServiceTest.php` | Calcul des créneaux : découpage en 30 min, jours sans consultation, absences, créneaux réservés ou annulés, créneaux passés |
+| `tests/Feature/AbsenceSeederTest.php` | Absences de démonstration calculées à partir du jour courant, sans doublons quand le seeder est relancé |
 | `tests/Feature/AuthTest.php` | Inscription, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
 | `tests/Feature/RendezVousTest.php` | Parcours de réservation, refus d'un créneau déjà pris, pendant une absence ou hors horaires, un seul rendez-vous à venir par médecin, pas deux rendez-vous à la même heure, annulation, interdiction d'annuler le rendez-vous d'un autre patient ou un rendez-vous passé |
 
