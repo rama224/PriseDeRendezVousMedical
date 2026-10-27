@@ -45,12 +45,31 @@ class AuthTest extends TestCase
         $this->post('/inscription', [
             'name' => 'Nouveau Patient',
             'email' => 'nouveau@test.com',
-            'password' => 'motdepasse',
-            'password_confirmation' => 'motdepasse',
+            'password' => 'MotDePasse1!',
+            'password_confirmation' => 'MotDePasse1!',
         ])->assertRedirect('/rendez-vous');
 
         $this->assertDatabaseHas('users', ['email' => 'nouveau@test.com']);
         $this->assertAuthenticated();
+    }
+
+    public function test_inscription_refusee_si_mot_de_passe_trop_faible()
+    {
+        $this->post('/inscription', [
+            'name' => 'Test',
+            'email' => 'faible@test.com',
+            'password' => 'motdepasse',
+            'password_confirmation' => 'motdepasse',
+        ])->assertSessionHasErrors('password');
+
+        $this->assertSame([
+            'Le champ mot de passe doit contenir au moins une majuscule et une minuscule.',
+            'Le champ mot de passe doit contenir au moins un caractère spécial.',
+            'Le champ mot de passe doit contenir au moins un chiffre.',
+        ], session('errors')->get('password'));
+
+        $this->assertDatabaseMissing('users', ['email' => 'faible@test.com']);
+        $this->assertGuest();
     }
 
     public function test_inscription_refusee_si_email_deja_utilise_ou_mot_de_passe_trop_court()

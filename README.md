@@ -31,7 +31,7 @@ Réalisée dans le cadre du test technique *Développeur(se) Fullstack*.
 Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous**. Les centres, spécialités, médecins, horaires et absences sont fournis par le jeu de données d'exemple (pas d'écrans d'administration).
 
 **Authentification**
-- Inscription (nom, e-mail, mot de passe confirmé de 8 caractères minimum), avec connexion automatique
+- Inscription (nom, e-mail, mot de passe confirmé), avec connexion automatique. Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.
 - Connexion avec option « Se souvenir de moi », déconnexion
 - Pages de rendez-vous réservées aux utilisateurs connectés
 
@@ -46,7 +46,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 - ✅ Annulation d'un rendez-vous à venir (le créneau redevient disponible)
 - ✅ Interface responsive (Bootstrap 5)
 - ✅ Gestion de l'authentification (utilisateur simple : chaque patient a son compte et n'accède qu'à ses propres rendez-vous)
-- ✅ 35 tests automatisés (unitaires et fonctionnels)
+- ✅ 36 tests automatisés (unitaires et fonctionnels)
 
 ---
 
@@ -65,7 +65,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 - **Les règles métier sont isolées** dans deux services : `CreneauService` calcule les créneaux libres d'un médecin et `ReservationService` applique les règles de réservation, puis crée le rendez-vous. Le contrôleur reste fin.
 - **Les créneaux ne sont pas stockés** : ils sont calculés à la volée à partir des horaires hebdomadaires, des absences et des rendez-vous existants. Il n'y a ainsi aucune donnée à synchroniser quand un horaire ou une absence change.
 - **Les réservations simultanées sont sécurisées** : les vérifications et la création du rendez-vous se font dans une transaction, avec un verrou (`SELECT … FOR UPDATE`) sur le médecin et sur le patient. Deux patients ne peuvent pas obtenir le même créneau, et un double clic ne crée pas deux rendez-vous.
-- **Sécurité** : mots de passe hachés (bcrypt), protection CSRF, régénération de la session à la connexion, limitation à 5 tentatives de connexion par minute, vérification qu'un patient n'annule que ses propres rendez-vous.
+- **Sécurité** : mots de passe robustes imposés à l'inscription et hachés (bcrypt), protection CSRF, régénération de la session à la connexion, limitation à 5 tentatives de connexion par minute, vérification qu'un patient n'annule que ses propres rendez-vous.
 - Interface et messages de validation **en français**.
 
 ---
@@ -237,7 +237,7 @@ Les tests s'exécutent sur une base **SQLite en mémoire** (configurée dans `ph
 |---|---|
 | `tests/Unit/CreneauServiceTest.php` | Calcul des créneaux : découpage en 30 min, jours sans consultation, absences, créneaux réservés ou annulés, créneaux passés |
 | `tests/Feature/AbsenceSeederTest.php` | Absences de démonstration calculées à partir du jour courant, sans doublons quand le seeder est relancé |
-| `tests/Feature/AuthTest.php` | Inscription, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
+| `tests/Feature/AuthTest.php` | Inscription, mot de passe trop faible refusé, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
 | `tests/Feature/RendezVousTest.php` | Parcours de réservation, refus d'un créneau déjà pris, pendant une absence ou hors horaires, un seul rendez-vous à venir par médecin, pas deux rendez-vous à la même heure, annulation, interdiction d'annuler le rendez-vous d'un autre patient ou un rendez-vous passé |
 
 ---
