@@ -35,9 +35,10 @@
                         <input id="password" type="password" name="password"
                                class="form-control @error('password') is-invalid @enderror" required>
                         <div class="form-text">8 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial (ex. ! @ # ?).</div>
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        {{-- Toutes les exigences non respectées sont affichées en une fois --}}
+                        @foreach ($errors->get('password') as $message)
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @endforeach
                     </div>
 
                     <div class="mb-3">

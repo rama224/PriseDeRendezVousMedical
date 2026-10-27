@@ -68,6 +68,12 @@ class AuthTest extends TestCase
             'Le champ mot de passe doit contenir au moins un chiffre.',
         ], session('errors')->get('password'));
 
+        // Les trois messages sont affichés en une fois sur le formulaire
+        $this->get('/inscription')
+            ->assertSee('au moins une majuscule et une minuscule')
+            ->assertSee('au moins un caractère spécial')
+            ->assertSee('au moins un chiffre.');
+
         $this->assertDatabaseMissing('users', ['email' => 'faible@test.com']);
         $this->assertGuest();
     }
