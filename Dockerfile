@@ -1,9 +1,10 @@
 # Image de production : PHP 8.1 (dernière version officiellement supportée par Laravel 8) + Apache
 FROM php:8.1-apache
 
+# Pilotes MySQL (développement) et PostgreSQL (production sur Render)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libzip-dev unzip \
-    && docker-php-ext-install pdo_mysql zip \
+    && apt-get install -y --no-install-recommends libzip-dev libpq-dev unzip \
+    && docker-php-ext-install pdo_mysql pdo_pgsql zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Apache : réécriture d'URL (.htaccess de Laravel), racine sur public/
