@@ -6,7 +6,7 @@
 --
 --  Contenu : 3 centres, 5 spécialités, 10 médecins et leurs horaires,
 --  3 absences (maladie, congés, autre) et un compte de test :
---    patient@test.com / password
+--    patient@test.com / Patient123!
 --
 --  Les dates d'absence sont calculées par MySQL au moment de l'import
 --  (CURDATE()), comme le fait le seeder Laravel : il y a donc toujours
@@ -147,7 +147,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES (1,'Patient Test','patient@test.com',NULL,'$2y$10$kNNVNOnsW.XSxSUXiqzV5.N/EzHF8M51dD6xgCwaSqXsslXAbQMnO',NULL,'2026-10-27 11:41:49','2026-10-27 11:41:49');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES (1,'Patient Test','patient@test.com',NULL,'$2y$10$n1s0uCVUYWUuk2HsxmciOOEdfJtbSodVuO/EEsMWbHHj3k9eiC336',NULL,'2026-10-27 11:41:49','2026-10-28 08:06:44');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -6,7 +6,7 @@ Réalisée dans le cadre du test technique *Développeur(se) Fullstack*.
 
 - **Application en ligne :** <https://rdv-medical-109y.onrender.com>
 - **Code source :** <https://github.com/rama224/PriseDeRendezVousMedical>
-- **Compte de test :** `patient@test.com` / `password`
+- **Compte de test :** `patient@test.com` / `Patient123!`
 
 > L'application est hébergée sur l'offre gratuite de Render : après 15 minutes sans visite, elle se met en veille et **le premier chargement peut prendre 30 à 60 secondes**. Les pages suivantes s'affichent normalement.
 
@@ -47,7 +47,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 - ✅ Annulation d'un rendez-vous à venir (le créneau redevient disponible)
 - ✅ Interface responsive (Bootstrap 5)
 - ✅ Gestion de l'authentification (utilisateur simple : chaque patient a son compte et n'accède qu'à ses propres rendez-vous)
-- ✅ 38 tests automatisés (unitaires et fonctionnels)
+- ✅ 40 tests automatisés (unitaires et fonctionnels)
 
 ---
 
@@ -206,7 +206,7 @@ Pour remettre la base à zéro avec les données d'exemple : `php artisan migrat
 
 | E-mail | Mot de passe |
 |---|---|
-| `patient@test.com` | `password` |
+| `patient@test.com` | `Patient123!` |
 
 Vous pouvez aussi créer votre propre compte depuis la page d'inscription.
 
@@ -238,7 +238,7 @@ Les tests s'exécutent sur une base **SQLite en mémoire** (configurée dans `ph
 |---|---|
 | `tests/Unit/CreneauServiceTest.php` | Calcul des créneaux : découpage en 30 min, jours sans consultation, absences, créneaux réservés ou annulés, créneaux passés |
 | `tests/Feature/AbsenceSeederTest.php` | Absences de démonstration calculées à partir du jour courant, sans doublons quand le seeder est relancé |
-| `tests/Feature/AuthTest.php` | Inscription, mot de passe trop faible refusé, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
+| `tests/Feature/AuthTest.php` | Inscription, mot de passe trop faible refusé, compte de démonstration conforme à la règle et remis en état sans doublon, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
 | `tests/Feature/RendezVousTest.php` | Parcours de réservation, refus d'un créneau déjà pris, pendant une absence ou hors horaires, un seul rendez-vous à venir par médecin, pas deux rendez-vous à la même heure, annulation, interdiction d'annuler le rendez-vous d'un autre patient ou un rendez-vous passé |
 
 ---
@@ -257,7 +257,8 @@ L'application en ligne est hébergée sur **[Render](https://render.com)** (offr
 2. applique les migrations (`php artisan migrate --force`) ;
 3. charge le jeu de données d'exemple si la base est vide ;
 4. recalcule les absences de démonstration à partir de la date du jour ;
-5. démarre Apache.
+5. crée ou remet en état le compte de démonstration `patient@test.com` ;
+6. démarre Apache.
 
 **Variables d'environnement** à définir sur le service :
 

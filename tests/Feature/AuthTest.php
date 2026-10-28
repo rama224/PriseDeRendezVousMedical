@@ -3,12 +3,37 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_le_mot_de_passe_du_compte_de_demonstration_respecte_la_regle_d_inscription()
+    {
+        $this->post('/inscription', [
+            'name' => 'Test',
+            'email' => 'regle@test.com',
+            'password' => UserSeeder::MOT_DE_PASSE,
+            'password_confirmation' => UserSeeder::MOT_DE_PASSE,
+        ])->assertSessionHasNoErrors();
+    }
+
+    public function test_le_compte_de_demonstration_est_remis_en_etat_sans_doublon()
+    {
+        $this->seed(UserSeeder::class);
+        User::where('email', UserSeeder::EMAIL)->update(['password' => bcrypt('autre')]);
+
+        $this->seed(UserSeeder::class);
+
+        $this->assertSame(1, User::where('email', UserSeeder::EMAIL)->count());
+
+        $this->post('/connexion', ['email' => UserSeeder::EMAIL, 'password' => UserSeeder::MOT_DE_PASSE])
+            ->assertRedirect('/rendez-vous');
+        $this->assertAuthenticated();
+    }
 
     public function test_un_visiteur_est_redirige_vers_la_connexion()
     {

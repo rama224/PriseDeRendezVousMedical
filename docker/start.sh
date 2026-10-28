@@ -11,4 +11,7 @@ php artisan db:seed --force
 # Absences de démonstration recalculées à partir de la date du jour
 php artisan db:seed --class=AbsenceSeeder --force
 
+# Compte de démonstration créé ou remis en état (mot de passe à jour)
+php artisan db:seed --class=UserSeeder --force
+
 exec apache2-foreground
