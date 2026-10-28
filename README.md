@@ -239,7 +239,7 @@ Les tests s'exécutent sur une base **SQLite en mémoire** (configurée dans `ph
 | `tests/Unit/CreneauServiceTest.php` | Calcul des créneaux : découpage en 30 min, jours sans consultation, absences, créneaux réservés ou annulés, créneaux passés |
 | `tests/Feature/AbsenceSeederTest.php` | Absences de démonstration calculées à partir du jour courant, sans doublons quand le seeder est relancé |
 | `tests/Feature/AuthTest.php` | Inscription, mot de passe trop faible refusé, compte de démonstration conforme à la règle et remis en état sans doublon, connexion, mauvais mot de passe, déconnexion, accès refusé aux visiteurs |
-| `tests/Feature/RendezVousTest.php` | Parcours de réservation, refus d'un créneau déjà pris, pendant une absence ou hors horaires, un seul rendez-vous à venir par médecin, pas deux rendez-vous à la même heure, annulation, interdiction d'annuler le rendez-vous d'un autre patient ou un rendez-vous passé |
+| `tests/Feature/RendezVousTest.php` | Parcours de réservation, refus d'un créneau déjà pris, pendant une absence ou hors horaires, un seul rendez-vous à venir par médecin, pas deux rendez-vous à la même heure, annulation, interdiction d'annuler le rendez-vous d'un autre patient ou un rendez-vous passé, menu compte et rappel du patient sur la confirmation, menu actif, sortie « Quitter sans réserver » |
 
 ---
 
@@ -298,10 +298,12 @@ database/
 └── sql/
     ├── schema.sql                     # Script SQL de création des tables
     └── donnees.sql                    # Script SQL du jeu de données
-resources/views/
-├── layouts/app.blade.php              # Mise en page commune
-├── auth/                              # Connexion, inscription
-└── rendez-vous/                       # Réservation, confirmation, mes rendez-vous
+resources/
+├── lang/fr/ et lang/fr.json           # Traductions françaises (validation, authentification, mot de passe)
+└── views/
+    ├── layouts/app.blade.php          # Mise en page commune
+    ├── auth/                          # Connexion, inscription
+    └── rendez-vous/                   # Réservation, confirmation, mes rendez-vous
 routes/web.php                         # Routes de l'application
 tests/                                 # Tests unitaires et fonctionnels
 docker/start.sh                        # Script de démarrage en production
