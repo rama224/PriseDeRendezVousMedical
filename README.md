@@ -73,55 +73,41 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 
 ## Modélisation
 
-```mermaid
-erDiagram
-    CENTRES ||--o{ MEDECINS : "emploie"
-    SPECIALITES ||--o{ MEDECINS : "regroupe"
-    MEDECINS ||--o{ DISPONIBILITES : "consulte selon"
-    MEDECINS ||--o{ ABSENCES : "peut avoir"
-    MEDECINS ||--o{ RENDEZ_VOUS : "reçoit"
-    USERS ||--o{ RENDEZ_VOUS : "réserve"
-
-    CENTRES {
-        string nom
-        string adresse
-        string telephone
-        string email
-    }
-    SPECIALITES {
-        string nom
-    }
-    MEDECINS {
-        string nom
-        string prenom
-        int specialite_id FK
-        int centre_id FK
-    }
-    DISPONIBILITES {
-        int medecin_id FK
-        int jour_semaine
-        time heure_debut
-        time heure_fin
-    }
-    ABSENCES {
-        int medecin_id FK
-        date date_debut
-        date date_fin
-        enum motif
-    }
-    RENDEZ_VOUS {
-        int user_id FK
-        int medecin_id FK
-        datetime date_heure
-        string motif
-        enum statut
-    }
-    USERS {
-        string name
-        string email
-        string password
-    }
+```text
+┌────────────────────┐                              ┌────────────────────┐
+│ CENTRES            │                              │ SPECIALITES        │
+│ nom                │                              │ nom                │
+│ adresse            │                              └──────────┬─────────┘
+│ telephone          │                                         │
+│ email              │                                         │
+└──────────┬─────────┘                                         │
+           │ 1                                                 │ 1
+           │ N                                                 │ N
+┌──────────▼───────────────────────────────────────────────────▼─────────┐
+│ MEDECINS                                                               │
+│ nom, prenom                                                            │
+│ centre_id (FK → centres), specialite_id (FK → specialites)             │
+└──────────┬─────────────────────────┬─────────────────────────┬─────────┘
+           │ 1                       │ 1                       │ 1
+           │ N                       │ N                       │ N
+┌──────────▼─────────┐    ┌──────────▼─────────┐    ┌──────────▼─────────┐
+│ DISPONIBILITES     │    │ ABSENCES           │    │ RENDEZ_VOUS        │
+│ medecin_id (FK)    │    │ medecin_id (FK)    │    │ medecin_id (FK)    │
+│ jour_semaine       │    │ date_debut         │    │ user_id (FK)       │
+│ heure_debut        │    │ date_fin           │    │ date_heure         │
+│ heure_fin          │    │ motif              │    │ motif, statut      │
+└────────────────────┘    └────────────────────┘    └──────────▲─────────┘
+                                                               │ N
+                                                               │ 1
+                                                    ┌──────────┴─────────┐
+                                                    │ USERS (patients)   │
+                                                    │ name               │
+                                                    │ email              │
+                                                    │ password           │
+                                                    └────────────────────┘
 ```
+
+Lecture : **1 → N** signifie « un … pour plusieurs … ». Un centre emploie plusieurs médecins, une spécialité regroupe plusieurs médecins, et chaque médecin a plusieurs plages horaires, absences et rendez-vous. Un patient (`users`) peut avoir plusieurs rendez-vous.
 
 | Table | Rôle |
 |---|---|
