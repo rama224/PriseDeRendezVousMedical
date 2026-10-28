@@ -34,14 +34,23 @@
                                @if (request()->routeIs('rendez-vous.index')) aria-current="page" @endif
                                href="{{ route('rendez-vous.index') }}">Mes rendez-vous</a>
                         </li>
-                        <li class="nav-item">
-                            <span class="navbar-text mx-md-2">{{ Auth::user()->name }}</span>
-                        </li>
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-light btn-sm">Déconnexion</button>
-                            </form>
+                        <li class="nav-item dropdown ms-md-2">
+                            <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="menu-compte"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ Auth::user()->name }}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="menu-compte">
+                                <div class="px-3 py-2">
+                                    <div class="fw-semibold">{{ Auth::user()->name }}</div>
+                                    <div class="small text-muted">{{ Auth::user()->email }}</div>
+                                    <div class="small text-muted">Inscrit le {{ Auth::user()->created_at->translatedFormat('j F Y') }}</div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">Déconnexion</button>
+                                </form>
+                            </div>
                         </li>
                     @else
                         <li class="nav-item">

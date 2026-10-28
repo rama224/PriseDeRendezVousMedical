@@ -80,6 +80,24 @@ class RendezVousTest extends TestCase
             ->assertSee('aria-current="page"', false);
     }
 
+    public function test_le_menu_affiche_les_informations_du_patient_connecte()
+    {
+        $this->actingAs($this->patient)
+            ->get('/rendez-vous')
+            ->assertSee($this->patient->name)
+            ->assertSee($this->patient->email)
+            ->assertSee('Inscrit le 7 janvier 2030')
+            ->assertSee('Déconnexion');
+    }
+
+    public function test_la_confirmation_indique_pour_quel_patient_est_le_rendez_vous()
+    {
+        $this->actingAs($this->patient)
+            ->get('/rendez-vous/confirmer?medecin_id=' . $this->medecin->id . '&date_heure=2030-01-07+09:00')
+            ->assertOk()
+            ->assertSeeInOrder(['Patient', $this->patient->name, $this->patient->email, 'Médecin', $this->medecin->nom_complet]);
+    }
+
     public function test_on_peut_quitter_la_confirmation_sans_reserver()
     {
         $this->actingAs($this->patient)

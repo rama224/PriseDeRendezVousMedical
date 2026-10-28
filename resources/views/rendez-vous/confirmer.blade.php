@@ -10,6 +10,9 @@
                 <h1 class="h4 mb-4">Confirmer le rendez-vous</h1>
 
                 <dl class="row mb-4">
+                    <dt class="col-sm-4">Patient</dt>
+                    <dd class="col-sm-8">{{ Auth::user()->name }}<br><small class="text-muted">{{ Auth::user()->email }}</small></dd>
+
                     <dt class="col-sm-4">Médecin</dt>
                     <dd class="col-sm-8">{{ $medecin->nom_complet }}</dd>
 

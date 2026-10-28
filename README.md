@@ -33,6 +33,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 **Authentification**
 - Inscription (nom, e-mail, mot de passe confirmé), avec connexion automatique. Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.
 - Connexion avec option « Se souvenir de moi », déconnexion
+- Menu « compte » affichant le patient connecté (nom, e-mail, date d'inscription), rappelé aussi sur la confirmation du rendez-vous
 - Pages de rendez-vous réservées aux utilisateurs connectés
 
 **Prise de rendez-vous**
@@ -46,7 +47,7 @@ Le périmètre retenu couvre **l'authentification** et **la prise de rendez-vous
 - ✅ Annulation d'un rendez-vous à venir (le créneau redevient disponible)
 - ✅ Interface responsive (Bootstrap 5)
 - ✅ Gestion de l'authentification (utilisateur simple : chaque patient a son compte et n'accède qu'à ses propres rendez-vous)
-- ✅ 36 tests automatisés (unitaires et fonctionnels)
+- ✅ 38 tests automatisés (unitaires et fonctionnels)
 
 ---
 
@@ -312,6 +313,7 @@ Dockerfile                             # Image de production (PHP 8.1 + Apache)
 
 - Espace d'administration pour gérer les centres, spécialités, médecins, horaires et absences
 - Espace médecin pour consulter son agenda
+- Page « Mon profil » pour modifier son nom, son e-mail ou son mot de passe, et réinitialisation du mot de passe oublié par e-mail
 - Envoi d'un e-mail de confirmation et de rappel au patient
 - Navigation par semaine et affichage du prochain créneau disponible de chaque médecin
 - Durée de consultation paramétrable par médecin ou par spécialité
